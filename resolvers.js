@@ -5,29 +5,45 @@ const User = require('./models/User')
 const Order = require('./models/Order')
 const { dateToString } = require('./helpers/date')
 
+
 const resolvers = {
     Query: {
-        products: () => Product.find(),
-        product: (_, { _id }) => Product.findById({ _id }),
-        productbyName: async (_, { title }) => {
+
+        products: async () => {
             try {
-                const productbyName = await Product.findOne({ title })
-                console.log(productbyName)     
-                return productbyName
+                const products = await Product.find()
+                return products
             } catch(err) {
                 console.log(err)
                 return err
             }
         },
-        users: () => User.find().then(users => {
-            for (user of users) {
-                user.password = null
+        product: async (_, { _id }) => {
+            try {
+                const product = await Product.findById({ _id })
+                return product
+            } catch(err) {
+                console.log(err)
+                return err
             }
-            return users
-        }),
-        user: (_, { _id }) => User.findById({ _id }).populate('orders'),
-        orders: () => Order.find().populate('customer'),
-        order: (_, { _id }) => Order.findById({ _id }).populate('customer')
+        },
+
+        users: async () => {
+            try {
+                const users = await User.find().populate('orders')
+                for (user of users) {
+                    user.password = null
+                }
+                return users
+            } catch(err) {
+                console.log(err)
+                return err
+            }
+            
+        },
+        user: async (_, { _id }) => await User.findById({ _id }).populate('orders'),
+        orders: async () => await Order.find().populate('customer'),
+        order: async (_, { _id }) => await Order.findById({ _id }).populate('customer')
     },
 
     Mutation: {
