@@ -2,17 +2,23 @@ const mongoose = require('mongoose')
 
 const orderSchema = mongoose.Schema({
     number: {
-        type: Number,
+        type: String,
         required: true
     },
     customer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    isDone: {
-        type: Boolean,
+    status: {
+        type: String,
         required: true,
-        default: false
+        enum: [
+            'new',
+            'delivery',
+            'completed',
+            'canceled'
+        ],
+        default: 'new'
     },
     created: {
         type: Date,

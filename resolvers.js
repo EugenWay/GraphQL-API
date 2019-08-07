@@ -51,7 +51,8 @@ const resolvers = {
         createOrder: async (_,{ _customerID }) => {
            
             const order = await new Order({
-                number: Math.round(Math.random() * 100),
+                // TODO: remove possibility of collisions
+                number: `AR2019${Math.round(Math.random() * 1000)}`,
                 customer: _customerID
             })
 
@@ -92,6 +93,10 @@ const resolvers = {
                 return err
             }
             
+        },
+        updateStatus: async (_, { _orderID, status }) => {
+            const updatedOrder = await Order.findByIdAndUpdate({ _id: _orderID }, { $set: { status: status }}, {returnOriginal: false})
+            return updatedOrder
         },
 
         createUser: async (_,{ email, password }) => {

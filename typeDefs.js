@@ -22,9 +22,9 @@ const typeDefs = gql`
 
   type Order {
      _id: ID!
-     number: Int!
+     number: String!
      customer: User!
-     isDone: Boolean!
+     status: String!
      created: String!
   }
 
@@ -43,6 +43,7 @@ const typeDefs = gql`
       createUser(email: String!, password: String!): User!
       createOrder(_customerID: ID!): Order!
       deleteOrder(_id: ID!): String
+      updateStatus(_orderID: ID!, status: String!): Order!
    
   }
 `;
