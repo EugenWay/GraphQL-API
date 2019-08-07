@@ -46,25 +46,48 @@ const resolvers = {
             console.log(`Product was deleted`)
             return deletedProduct
         },
-        createOrder: async () => {
+        
+        createOrder: async (_,{ _customerID }) => {
+           
             const order = await new Order({
                 number: Math.round(Math.random() * 100),
-                customer: "5d4acd30aab117165ec2244a"
+                customer: _customerID
             })
-            const savedOrder = await order.save()
-            console.log(savedOrder)
-            const user = await User.findById("5d4acd30aab117165ec2244a")
 
-            console.log(user)
-            await user.orders.push(savedOrder)
-            await user.save()
+            try {
 
-            return savedOrder
+                const savedOrder = await order.save()
+                const customer = await User.findById({ _id: _customerID })
+
+                if(!customer) throw new Error('User not found')
+
+                await customer.orders.push(savedOrder)
+                await customer.save()
+                return savedOrder
+
+            } catch(err) {
+                console.log(err);
+                return err;
+            }
+
         },
         deleteOrder: async (_, { _id }) => {
-            console.log({ _id })
-            await Order.findByIdAndDelete( { _id })
-            return `OK`
+            // Issue. When we delete order we dont remove it from user.orders array
+            // maybe chenge stastus of order, like "completed, deleted" 
+
+            try {
+
+                const deletedOrder = await Order.findByIdAndDelete( { _id })
+
+                if(deletedOrder === null) throw new Error('Nothing to delete')
+                
+                return `OK`
+
+            } catch(err) {
+                console.log(err)
+                return err
+            }
+            
         },
 
         createUser: async (_,{ email, password }) => {
@@ -72,7 +95,6 @@ const resolvers = {
             try {
 
                 // Checking if exist user by e-mail in data-base
-
                 await User.findOne({email}).then(user => {
                     if(user) {
                         throw new Error('Oops. User exists already.')
@@ -80,11 +102,9 @@ const resolvers = {
                 })
 
                 //Salt our password
-
                 const hashedPassword  = await bcrypt.hash(password, 12)
 
                 // Create new user 
-
                 const user = await new User({
                     email: email,
                     password: hashedPassword

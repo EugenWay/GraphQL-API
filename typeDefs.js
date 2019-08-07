@@ -8,7 +8,7 @@ const typeDefs = gql`
     productbyName(title: String!): Product!
     users: [User]!
     user(_id: ID!): User!
-    orders: [Order]!
+    orders: [Order!]!
     order(_id: ID!): Order!
   }
 
@@ -40,7 +40,7 @@ const typeDefs = gql`
       updateProduct(_id: ID!, title: String, description: String, price: Float, inStock: Boolean): Product!
       deleteProduct(_id: ID!): Product!
       createUser(email: String!, password: String!): User!
-      createOrder: Order!
+      createOrder(_customerID: ID!): Order!
       deleteOrder(_id: ID!): String
    
   }
