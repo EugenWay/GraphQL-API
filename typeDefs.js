@@ -25,6 +25,7 @@ const typeDefs = gql`
      number: Int!
      customer: User!
      isDone: Boolean!
+     created: String!
   }
 
   type User {

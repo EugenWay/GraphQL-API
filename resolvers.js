@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const Product = require('./models/Product')
 const User = require('./models/User')
 const Order = require('./models/Order')
+const { dateToString } = require('./helpers/date')
 
 const resolvers = {
     Query: {
@@ -63,7 +64,10 @@ const resolvers = {
 
                 await customer.orders.push(savedOrder)
                 await customer.save()
-                return savedOrder
+                return {
+                    ...savedOrder._doc,
+                    created: dateToString(savedOrder.created)
+                }
 
             } catch(err) {
                 console.log(err);
