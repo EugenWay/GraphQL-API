@@ -9,12 +9,12 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    // orders: [
-    //     {
-    //         type: Schema.Types.ObjectId,
-    //         ref: 'Order'
-    //     }
-    // ]
+    orders: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Order'
+        }
+    ]
 })
 
 module.exports = mongoose.model('User', userSchema)

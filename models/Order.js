@@ -5,12 +5,10 @@ const orderSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    customer: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'User'
-        }
-    ],
+    customer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     isDone: {
         type: Boolean,
         required: true,

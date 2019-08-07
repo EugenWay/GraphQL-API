@@ -7,7 +7,9 @@ const typeDefs = gql`
     product(_id: ID!): Product!
     productbyName(title: String!): Product!
     users: [User]!
-
+    user(_id: ID!): User!
+    orders: [Order]!
+    order(_id: ID!): Order!
   }
 
   type Product {
@@ -21,7 +23,7 @@ const typeDefs = gql`
   type Order {
      _id: ID!
      number: Int!
-     customer: [User]!
+     customer: User!
      isDone: Boolean!
   }
 
@@ -29,6 +31,7 @@ const typeDefs = gql`
      _id: ID!
      email: String!
      password: String
+     orders: [Order!]
   }
 
   type Mutation {
@@ -36,10 +39,10 @@ const typeDefs = gql`
       createProduct(title: String!, description: String!, price: Float! ): Product!
       updateProduct(_id: ID!, title: String, description: String, price: Float, inStock: Boolean): Product!
       deleteProduct(_id: ID!): Product!
-
-      createUser(email: String!, password: String!) : User
-
-      
+      createUser(email: String!, password: String!): User!
+      createOrder: Order!
+      deleteOrder(_id: ID!): String
+   
   }
 `;
 

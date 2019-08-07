@@ -2,6 +2,7 @@
 const bcrypt = require('bcryptjs')
 const Product = require('./models/Product')
 const User = require('./models/User')
+const Order = require('./models/Order')
 
 const resolvers = {
     Query: {
@@ -22,7 +23,10 @@ const resolvers = {
                 user.password = null
             }
             return users
-        })
+        }),
+        user: (_, { _id }) => User.findById({ _id }).populate('orders'),
+        orders: () => Order.find().populate('customer'),
+        order: (_, { _id }) => Order.findById({ _id }).populate('customer')
     },
 
     Mutation: {
@@ -42,6 +46,27 @@ const resolvers = {
             console.log(`Product was deleted`)
             return deletedProduct
         },
+        createOrder: async () => {
+            const order = await new Order({
+                number: Math.round(Math.random() * 100),
+                customer: "5d4acd30aab117165ec2244a"
+            })
+            const savedOrder = await order.save()
+            console.log(savedOrder)
+            const user = await User.findById("5d4acd30aab117165ec2244a")
+
+            console.log(user)
+            await user.orders.push(savedOrder)
+            await user.save()
+
+            return savedOrder
+        },
+        deleteOrder: async (_, { _id }) => {
+            console.log({ _id })
+            await Order.findByIdAndDelete( { _id })
+            return `OK`
+        },
+
         createUser: async (_,{ email, password }) => {
             
             try {
