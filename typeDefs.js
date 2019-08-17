@@ -5,7 +5,6 @@ const typeDefs = gql`
   type Query {
     products: [Product!]!
     product(_id: ID!): Product!
-    productbyName(title: String!): Product!
     users: [User]!
     user(_id: ID!): User!
     orders: [Order!]!
